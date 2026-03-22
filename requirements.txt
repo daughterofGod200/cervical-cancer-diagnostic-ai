@@ -1,0 +1,7 @@
+fastai
+streamlit
+fastprogress
+pillow
+gdown
+torch
+torchvision
