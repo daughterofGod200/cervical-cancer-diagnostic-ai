@@ -17,8 +17,8 @@ def load_model_from_drive():
             gdown.download(url, MODEL_FILENAME, quiet=False)
     return load_learner(MODEL_FILENAME)
 
-# Load the "Brain"
-learn = load_model_from_drive()
+# Load the model directly from the repo
+learn = load_learner("cervix_levels_model.pkl")
 
 # --- 2. FRONTEND DESIGN ---
 st.set_page_config(page_title="Cervical Cancer AI", page_icon="🔬")
