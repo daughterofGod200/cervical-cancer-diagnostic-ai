@@ -1,77 +1,27 @@
-import streamlit as st
+import gradio as gr
 from fastai.vision.all import *
-from PIL import Image
-import os
-import gdown
 
-# --- 1. SETTINGS & MODEL DOWNLOAD ---
-FILE_ID = '1D5CVlxR26-RzAjGQqtSxtJhd-ymw9OpT'
-MODEL_FILENAME = 'cervix_levels_model.pkl'
+# 1. Load the model
+# Hugging Face will look for this file in the same repository
+learn = load_learner('cervix_levels_model.pkl')
 
-@st.cache_resource
-def load_model_from_drive():
-    # If the file doesn't exist, or is a 'fake' small file from a failed download
-    if not os.path.exists(MODEL_FILENAME) or os.path.getsize(MODEL_FILENAME) < 1000000:
-        if os.path.exists(MODEL_FILENAME): os.remove(MODEL_FILENAME)
-        
-        with st.spinner("Downloading AI Model from Google Drive... This may take a minute."):
-            # Using fuzzy=True to bypass Google Drive's large file warning
-            url = f'https://drive.google.com/uc?id={FILE_ID}'
-            gdown.download(url, MODEL_FILENAME, quiet=False, fuzzy=True)
-            
-    try:
-        return load_learner(MODEL_FILENAME)
-    except Exception as e:
-        # If the file is still corrupt, delete it so the next refresh tries again
-        if os.path.exists(MODEL_FILENAME): os.remove(MODEL_FILENAME)
-        st.error("Model file corrupted or download failed. Please refresh the page.")
-        st.stop()
+# 2. Define the prediction function
+def predict_cell(img):
+    pred, idx, probs = learn.predict(img)
+    labels = ["Level 0", "Level 1", "Level 2", "Level 3"]
+    # Returns a dictionary of probabilities for the UI to display
+    return {labels[i]: float(probs[i]) for i in range(len(labels))}
 
-# Load the "Brain"
-learn = load_model_from_drive()
+# 3. Build the Frontend
+# Your student can change 'title', 'description', and 'theme' very easily here
+interface = gr.Interface(
+    fn=predict_cell,
+    inputs=gr.Image(type="pill"),
+    outputs=gr.Label(num_top_classes=3),
+    title="🔬 Cervical Cancer Diagnostic Assistant",
+    description="Upload a microscopic cell image for AI-powered classification. Developed by Theresa Mapfumo.",
+    theme="soft" 
+)
 
-# --- 2. FRONTEND DESIGN ---
-st.set_page_config(page_title="Cervical Cancer AI", page_icon="🔬")
-
-# Header Section
-st.title("🔬 Digital Cytology Diagnostic Assistant")
-st.markdown(f"**Lead Engineer:** Theresa Mapfumo")
-st.markdown("---")
-
-# Sidebar Instructions
-with st.sidebar:
-    st.header("How to use")
-    st.write("1. Upload a microscopic image of a cell.")
-    st.write("2. The AI will analyze the structure.")
-    st.write("3. Review the predicted Level (0-3).")
-    st.info("Level 0: Normal\n\nLevel 3: High Risk")
-
-# Image Uploader
-uploaded_file = st.file_uploader("Upload a cell image...", type=["jpg", "png", "jpeg"])
-
-if uploaded_file is not None:
-    # Display the image
-    img = Image.open(uploaded_file)
-    st.image(img, caption="Uploaded Image", use_container_width=True)
-    
-    # Run Prediction
-    with st.spinner("Analyzing..."):
-        # Fastai prediction
-        pred, pred_idx, probs = learn.predict(img)
-        confidence = float(probs[pred_idx]) * 100
-
-    # Display Results
-    st.subheader("Diagnostic Result")
-    
-    # Color-coded alerts based on the result
-    if "Level 3" in pred:
-        st.error(f"DETECTION: {pred}")
-    elif "Level 2" in pred:
-        st.warning(f"DETECTION: {pred}")
-    else:
-        st.success(f"DETECTION: {pred}")
-
-    st.write(f"**Confidence Score:** {confidence:.2f}%")
-    
-    # Progress bar for visual impact
-    st.progress(int(confidence))
+# 4. Launch
+interface.launch()
