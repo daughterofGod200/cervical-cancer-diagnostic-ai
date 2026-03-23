@@ -1,46 +1,49 @@
-# cervical-cancer-diagnostic-ai
-🔬 Cervical Cancer Diagnostic AI A Deep Learning Project for "Add your preferred project Title"
-
+🔬 Cervical Cancer Diagnostic AI
+Automated Cytopathology Classification using Deep Learning
 👩‍💻 Project Team
-
-*Lead Engineer: Theresa Mapfumo
-**Institution: Harare Institute of Technology (HIT)
+Lead Engineer: Theresa Mapfumo
+Institution: Harare Institute of Technology (HIT)
+Department: Biomedical Engineering
 📌 Project Overview
-This application leverages a ResNet-34 Convolutional Neural Network (CNN) to classify microscopic cervical cell images into four diagnostic levels (0-3). The model was trained using the SIPaKMeD dataset and achieved a validation accuracy of 97.8%.
+This application leverages a ResNet-34 Convolutional Neural Network (CNN) to classify microscopic cervical cell images into four diagnostic levels. The system is designed to assist pathologists by providing a rapid second opinion on cellular morphology.
 
-🧬 Diagnostic Levels & Mapping
-Level 0 (Normal): Superficial-Intermediate / Parabasal cells.
-Level 1 (Benign): Metaplastic cells.
-Level 2 (Pre-Cancerous): Koilocytotic cells.
-Level 3 (Malignant): Dyskeratotic cells.
-🚀 Deployment Instructions
-1. Repository Preparation
-Ensure your GitHub repository contains:
+📊 Model Performance
+Architecture: ResNet-34 (Transfer Learning)
+Dataset: SIPaKMeD (Superficial, Intermediate, Parabasal, Koilocytotic, and Metaplastic cells)
+Validation Accuracy: 97.8%
+🧬 Diagnostic Mapping
+Level	Clinical Classification	Cell Type
+Level 0	Normal	Superficial-Intermediate / Parabasal
+Level 1	Benign	Metaplastic
+Level 2	Low-Grade (LSIL)	Koilocytotic
+Level 3	High-Grade (HSIL)	Dyskeratotic
+🚀 Deployment Instructions (Hugging Face Spaces)
+This project is optimized for Hugging Face Spaces using the Gradio SDK for a stable, high-performance web interface.
 
-app.py: The main Streamlit interface script.
-requirements.txt: Dependencies (fastai, streamlit, gdown, torch, torchvision).
-README.md: This documentation.
-2. Connect to Streamlit Cloud
-Log in to Streamlit Share.
-Click Create App > I already have an app.
-Select this repository and set the Main file path to app.py.
-Click Deploy.
+1. Repository Requirements
+Ensure the following files are uploaded to your Hugging Face Space:
+
+app.py: The Gradio interface logic.
+requirements.txt: Contains fastai.
+cervix_levels_model.pkl: The exported learner file.
+2. Online Setup
+Create a new Space on Hugging Face.
+Select Gradio as the SDK.
+Upload the files listed above via the "Files and versions" tab.
+The app will automatically build and go live at your Space URL.
 🎨 Frontend Creative Brief
-Note to the Frontend Developer: The "Engine" (AI Model) is ready. You have full creative control over the user interface. Please use your creativity to make this app look like a high-end medical tool.
+Note to the Lead Engineer: The AI "Engine" is fully integrated. You have creative control over the Gradio interface to make it look like a professional medical diagnostic tool.
 
-Recommended Creative Tasks:
+Recommended Enhancements:
 
-Visual Storytelling: Add a "Project Journey" section or an "About the Tech" expander that explains how the ResNet-34 architecture works.
-Interactive UI: Use st.columns to create a side-by-side view of the uploaded image and the AI's heat-map or confidence charts.
-UX Design: Design custom CSS or use Streamlit's "Wide Mode" to make the diagnostic results feel urgent and clear (e.g., using specific hex colors for medical warnings).
-Documentation: Create an "Instructions for Pathologists" section in the sidebar to make the tool feel ready for a clinic.
-🧪 How to Test the System
-Open the App: Navigate to your live Streamlit URL.
-Upload Image: Select a microscopic image from the SIPaKMeD dataset.
-Analyze: The system will process the image and display the Diagnostic Level, a Confidence Score, and a color-coded risk assessment.
+Custom Theming: Use theme="soft" or "glass" in app.py to match medical software aesthetics.
+Interpretation Guide: Add a Markdown section below the interface explaining the clinical significance of each Level (0-3).
+Example Gallery: Add a folder of "Test Images" so users can demonstrate the AI's accuracy instantly without needing their own files.
+Confidence Visualization: Ensure the gr.Label component is showing the top 3 classes to reflect the model's "thinking" process.
 🛠️ Technical Stack
-Backend: Python, Fastai, PyTorch
-Frontend: Streamlit
-Model Architecture: ResNet-34 (Transfer Learning)
-Storage: Google Drive API (via gdown)
-Disclaimer: This tool is developed for research and educational purposes as part of an Engineering Final Year Project. It is not intended for clinical use without professional medical supervision.
+Language: Python 3.11
+AI Framework: Fastai, PyTorch
+Interface: Gradio
+Hosting: Hugging Face Spaces (CPU Basic)
+License: MIT
+⚠️ Disclaimer: This tool is developed for research and educational purposes as part of a Final Year Engineering Project. It is not a replacement for professional medical diagnosis. All results should be verified by a certified pathologist.
